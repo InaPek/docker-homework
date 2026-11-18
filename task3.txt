@@ -1,0 +1,54 @@
+docker pull node:15.14
+15.14: Pulling from library/node
+4b57d41e8391: Pull complete 
+dc05be471d51: Pull complete 
+55fab5cadd3c: Pull complete 
+bfde2ec33fbc: Pull complete 
+7b6173a10eb8: Pull complete 
+6041b69671c6: Pull complete 
+989c5d2d2313: Pull complete 
+787f5e2f1047: Pull complete 
+bd821d20ef8c: Pull complete 
+Digest: sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
+Status: Downloaded newer image for node:15.14
+docker.io/library/node:15.14
+
+mkdir data
+
+docker run -d --name first_node -v "C:\Users\user\Desktop\НЕТОЛОГИЯ ФРОТЕНД_учебные проекты\docker-homework\data:/var/first/data" node:15.14 tail -f /dev/null
+fbba01d7e4d6a6c379452f2a0f219c7257a63458761b58988eb4248fe9420799
+
+docker run -d --name second_node -v "C:\Users\user\Desktop\НЕТОЛОГИЯ ФРОТЕНД_учебные проекты\docker-homework\data:/var/second/data" node:15.14 tail -f /dev/null
+a191f77569996d38f0b0179ef49f3f81c4008d86ed806d82257b457b2f3c8c41
+
+docker ps
+CONTAINER ID   IMAGE        COMMAND                  CREATED              STATUS              PORTS     NAMES
+a191f7756999   node:15.14   "docker-entrypoint.s…"   15 seconds ago       Up 14 seconds                 second_node
+fbba01d7e4d6   node:15.14   "docker-entrypoint.s…"   About a minute ago   Up About a minute             first_node
+
+docker exec first_node sh -c "echo 'Hello from the first container!' > /var/first/data/file1.txt"
+
+echo "Hello from my host computer!" > data\file2.txt 
+
+docker exec second_node ls -l /var/second/data
+total 0
+-rw-r--r-- 1 root root 32 Nov 18 18:32 file1.txt
+-rwxrwxrwx 1 root root 33 Nov 18 18:32 file2.txt
+
+docker exec second_node cat /var/second/data/file1.txt
+Hello from the first container!
+
+docker exec second_node cat /var/second/data/file2.txt
+"Hello from my host computer!" 
+
+docker stop first_node second_node
+first_node
+second_node
+
+docker rm first_node second_node
+first_node
+second_node
+
+docker rmi node:15.14
+Untagged: node:15.14
+Deleted: sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
